@@ -145,9 +145,6 @@ void on_new_connection(uv_stream_t *server, int status) {
     uv_tcp_init(app->loop, client);
     if (uv_accept(server, (uv_stream_t*) client) == 0) {
 
-        printf("Client count: %d\n", app->clients.client_count);
-        printf("Client capacity: %d\n", app->clients.client_capacity);
-
         if (app->clients.client_count == app->clients.client_capacity){
             if(realloc_clients(app) != 0){
                 uv_close((uv_handle_t *)client, on_close);
@@ -164,6 +161,9 @@ void on_new_connection(uv_stream_t *server, int status) {
             }
         }
 
+        printf("Client count: %d\n", app->clients.client_count);
+        printf("Client capacity: %d\n", app->clients.client_capacity);
+        
         uv_read_start((uv_stream_t*) client, alloc_buffer, echo_read);
     }
     else {
