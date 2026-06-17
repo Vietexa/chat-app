@@ -103,11 +103,12 @@ void echo_read(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf) {
             write_req_t *req = malloc(sizeof(write_req_t));
 
             int name_len = strlen(app_context->clients.peers[current_peer]->name);
-            req->buf.base = malloc(nread + name_len + 7); // said:
+            size_t msg_len = name_len + strlen(" said: ") + nread;
+            req->buf.base = malloc(msg_len + 1);
 
-            snprintf(req->buf.base, nread + name_len + 8, "%s said: %.*s",app_context->clients.peers[current_peer]->name, (int)nread, buf->base);
+            snprintf(req->buf.base, msg_len + 1, "%s said: %.*s",app_context->clients.peers[current_peer]->name, (int)nread, buf->base);
 
-            req->buf.len = nread + name_len + 8;
+            req->buf.len = msg_len;
 
             uv_write(
                 (uv_write_t*)req,
@@ -143,8 +144,8 @@ void on_new_connection(uv_stream_t *server, int status) {
     }
 
     uv_tcp_t *client = malloc(sizeof(uv_tcp_t));
-    client->data = server->data;
     uv_tcp_init(app->loop, client);
+    client->data = server->data;
     if (uv_accept(server, (uv_stream_t*) client) == 0) {
 
         if (app->clients.client_count == app->clients.client_capacity){

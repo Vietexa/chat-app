@@ -1,9 +1,22 @@
 cmake_minimum_required(VERSION 4.3.3)
 project(chat_app)
 
+include(FetchContent)
+
+FetchContent_Declare(
+    libuv
+    GIT_REPOSITORY https://github.com/libuv/libuv.git
+    GIT_TAG v1.52.1
+)
+
+FetchContent_MakeAvailable(libuv)
+
 add_executable(chat_client
                chat_client/main.c
                )
+
+
+
 
 target_link_libraries(chat_client uv)
 

@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <uv/unix.h>
 
 typedef struct message_buffer_t{
 char *buffer;
@@ -238,7 +237,7 @@ uv_connect_t *connect = malloc(sizeof(uv_connect_t));
 connect->data = &ctx;
 
 struct sockaddr_in dest;
-uv_ip4_addr("127.0.0.1", 7000, &dest);
+uv_ip4_addr("188.27.178.179", 7000, &dest);
 
 uv_tcp_connect(connect, socket, (const struct sockaddr*)&dest, on_connect);
 
